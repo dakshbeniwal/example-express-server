@@ -1,4 +1,4 @@
-## Basemark node server
+## Example Express server in typescript
 Node version - v14.15.5
 
 ### Available Scripts
