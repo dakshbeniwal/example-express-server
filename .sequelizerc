@@ -1,0 +1,5 @@
+var path = require('path')
+module.exports = {
+  'config':          path.resolve('./babelHook.js'),
+  'migrations-path': path.resolve('src/migrations')
+}
