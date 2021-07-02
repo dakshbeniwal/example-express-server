@@ -37,7 +37,7 @@ class Auth {
         return await new Promise((resolve) => req.login(user, async (err: Error) => {
             if (err) {
                 console.log("Error in login ", err);
-                return resolve({ "success": false, "err": err })
+                return resolve({ "success": false, "error": err.message })
             }
             return resolve({ "success": true, "data": user })
         }))

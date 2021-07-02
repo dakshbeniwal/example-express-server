@@ -1,7 +1,7 @@
 // import { IProcessEnv } from "../interfaces/environmentInterface";
 require('dotenv-flow').config({ "node_env": process.env.NODE_ENV });
 
-const NODE_ENV = process.env.NODE_ENV || "development";
+export const NODE_ENV = process.env.NODE_ENV || "development";
 
 // declare global {
 //   namespace NodeJS {

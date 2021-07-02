@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import * as CONSTANTS from "../config/constants.json";
+import { logger } from "./logger";
 
 class BaseError extends Error {
     public readonly name: string;
     public readonly httpCode: number;
     public readonly errorCode: string;
     public readonly isOperational: boolean;
+    public readonly description: string | undefined;
 
-    constructor(message: string, name: string, httpCode: number, errorCode: string, isOperational: boolean) {
+    constructor(message: string, name: string, httpCode: number, errorCode: string, isOperational: boolean, description?: string) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
 
@@ -15,6 +17,7 @@ class BaseError extends Error {
         this.httpCode = httpCode;
         this.errorCode = errorCode;
         this.isOperational = isOperational;
+        this.description = description;
 
         Error.captureStackTrace(this);
     }
@@ -23,6 +26,8 @@ class BaseError extends Error {
 class ErrorHandler {
     logError = (err: Error) => {
         console.log(err);
+        if (!this.isOperationalError(err))
+            logger.error(err);
     }
 
     logErrorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -43,38 +48,20 @@ class ErrorHandler {
 }
 
 export class NotFoundError extends BaseError {
-    constructor(
-        message: string,
-        name: string = CONSTANTS.NOT_FOUND.name,
-        errorCode: string = CONSTANTS.NOT_FOUND.errorCode,
-        statusCode: number = CONSTANTS.NOT_FOUND.statusCode,
-        isOperational: boolean = CONSTANTS.NOT_FOUND.isOperational
-    ) {
-        super(message, name, statusCode, errorCode, isOperational)
+    constructor(message: string) {
+        super(message, CONSTANTS.NOT_FOUND.name, CONSTANTS.NOT_FOUND.statusCode, CONSTANTS.NOT_FOUND.errorCode, CONSTANTS.NOT_FOUND.isOperational)
     }
 }
 
 export class InternalError extends BaseError {
-    constructor(
-        message: string,
-        name: string = CONSTANTS.INTERNAL_ERROR.name,
-        errorCode: string = CONSTANTS.INTERNAL_ERROR.errorCode,
-        statusCode: number = CONSTANTS.INTERNAL_ERROR.statusCode,
-        isOperational: boolean = CONSTANTS.INTERNAL_ERROR.isOperational
-    ) {
-        super(message, name, statusCode, errorCode, isOperational)
+    constructor(message: string = CONSTANTS.INTERNAL_ERROR.defaultMessage) {
+        super(CONSTANTS.INTERNAL_ERROR.defaultMessage, CONSTANTS.INTERNAL_ERROR.name, CONSTANTS.INTERNAL_ERROR.statusCode, CONSTANTS.INTERNAL_ERROR.errorCode, CONSTANTS.INTERNAL_ERROR.isOperational, message)
     }
 }
 
 export class BadRequestError extends BaseError {
-    constructor(
-        message: string,
-        name: string = CONSTANTS.BAD_REQUEST.name,
-        errorCode: string = CONSTANTS.BAD_REQUEST.errorCode,
-        statusCode: number = CONSTANTS.BAD_REQUEST.statusCode,
-        isOperational: boolean = CONSTANTS.BAD_REQUEST.isOperational
-    ) {
-        super(message, name, statusCode, errorCode, isOperational)
+    constructor(message: string) {
+        super(message, CONSTANTS.BAD_REQUEST.name, CONSTANTS.BAD_REQUEST.statusCode, CONSTANTS.BAD_REQUEST.errorCode, CONSTANTS.BAD_REQUEST.isOperational)
     }
 }
 

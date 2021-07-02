@@ -1,4 +1,3 @@
-Add winston logger
 Add express-winston
 Validation using joi
 Admin login

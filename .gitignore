@@ -1,6 +1,10 @@
 # dependencies
 /node_modules
+package-lock.json
 
+# build
 /build
 
-package-lock.json
+# logs
+/logs
+winston_audit.json
