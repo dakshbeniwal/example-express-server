@@ -29,6 +29,26 @@
             "errorCode": "validation_error",
             "statusCode": 400,
             "isOperational": true
+        },
+        "UNAUTHENTICATED_ERROR": {
+            "name": "Authentication error",
+            "errorCode": "unauthenticated",
+            "statusCode": 401,
+            "isOperational": true,
+            "defaultMessage": "You are not logged in, please login and try again."
         }
-    }
+    },
+    "USER_ATTRIBUTES": [
+        "id",
+        "email",
+        "firstname",
+        "lastname",
+        "username"
+    ],
+    "ADMIN_USER_ATTRIBUTES": [
+        "id",
+        "email",
+        "firstname",
+        "lastname"
+    ]
 }

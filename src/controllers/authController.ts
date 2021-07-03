@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { BadRequestError, InternalError, ValidationError } from "../helpers/errorHandler";
+import { NextFunction, Request, Response } from "express";
+import { BadRequestError, InternalError, UnauthenticatedError, ValidationError } from "../helpers/errorHandler";
 import { Passport } from "../helpers/passport";
 import { validateLoginData, validateSignupData } from "../validations/authValidations";
 
@@ -40,6 +40,24 @@ class Auth {
         else return loginResponse;
     }
 
+    adminLoginController = async (req: Request, res: Response) => {
+        console.log("in admin login controller ----");
+        const joiValidation = validateLoginData(req.body);
+        if (joiValidation.error) throw new ValidationError(joiValidation.error.message);
+
+        const adminLoginStrategyResponse: { success: boolean, error?: string, data?: any } = await new Promise((resolve) => new Passport().localPassport.authenticate('admin-login', (error, user) => {
+            if (error) resolve({ "success": false, "error": error });
+            else resolve({ "success": true, "data": user });
+        })(req, res))
+
+        console.log("adminLoginStrategyResponse", adminLoginStrategyResponse);
+        if (!adminLoginStrategyResponse.success) throw new BadRequestError(String(adminLoginStrategyResponse.error));
+
+        const loginResponse: any = await this.login(req, adminLoginStrategyResponse.data);
+        if (!loginResponse.success) throw new InternalError(loginResponse.error);
+        else return loginResponse;
+    }
+
     login = async (req: Request, user: any) => {
         return await new Promise((resolve) => req.login(user, async (err: Error) => {
             if (err) {
@@ -48,6 +66,21 @@ class Auth {
             }
             return resolve({ "success": true, "data": user })
         }))
+    }
+
+    getLoggedInUserController = async (req: Request) => {
+        const { user } = req;
+        return { "success": true, "data": user ? user : {} };
+    }
+
+    authorizeMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (req.user) return next();
+            else throw new UnauthenticatedError();
+        }
+        catch (err) {
+            return next(err);
+        }
     }
 }
 

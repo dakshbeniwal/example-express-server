@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
-import routes from "./src/routes";
+import routes from "./src/routes/publicRoutes";
+import adminRoutes from "./src/routes/adminRoutes";
 import requestIp from "request-ip";
 import cookieParser from "cookie-parser";
 import config from "./src/config/config";
@@ -10,13 +11,17 @@ import session from 'express-session';
 import connect_session_sequelize from "connect-session-sequelize";
 import { db, dbInstance } from "./src/models/index";
 import { httpLogger } from "./src/helpers/httpLogger";
+import * as CONSTANTS from "./src/config/constants.json";
 
 class App {
     public app: express.Application;
     public port: number;
+    private adminApp: express.Application;
+    private SequelizeStore = connect_session_sequelize(session.Store);
 
     constructor(port: number) {
         this.app = express();
+        this.adminApp = express();
         this.port = port;
     }
 
@@ -24,13 +29,48 @@ class App {
         await dbInstance.initializeDatabase();
         this.initializeMiddlewares();
         this.initializePassport();
+        this.initializeAdminPassport();
         this.initializeRoutes(routes);
         this.initializeErrorhandler();
     }
 
+    private initializeAdminPassport() {
+        const sessionStore = new this.SequelizeStore({
+            db: db.sequelize,
+            tableName: config.ADMIN_SESSION_TABLE_NAME
+        });
+        const adminPassport = new Passport().localPassport;
+
+        adminPassport.serializeUser((user: any, done: any) => {
+            done(null, user.id);
+        });
+        adminPassport.deserializeUser(async (id, done) => {
+            let user = await db.adminUsers.findByPk(id, { attributes: CONSTANTS.ADMIN_USER_ATTRIBUTES });
+            if (user) {
+                done(null, user);
+            }
+            else
+                done(user.errors, null);
+        });
+
+        this.adminApp.use(session({
+            name: config.ADMIN_SESSION_NAME,
+            secret: String(config.ADMIN_SESSION_SECRET),
+            store: sessionStore,
+            rolling: true,
+            resave: true,
+            saveUninitialized: false,
+            cookie: { maxAge: config.ADMIN_SESSION_AGE } // In MilliSeconds
+        }));
+
+        sessionStore.sync();
+
+        this.adminApp.use(adminPassport.initialize());
+        this.adminApp.use(adminPassport.session());
+    }
+
     private initializePassport() {
-        const SequelizeStore = connect_session_sequelize(session.Store);
-        const sessionStore = new SequelizeStore({
+        const sessionStore = new this.SequelizeStore({
             db: db.sequelize,
             tableName: config.SESSION_TABLE_NAME
         });
@@ -40,7 +80,7 @@ class App {
             done(null, user.id);
         });
         passport.deserializeUser(async (id, done) => {
-            let user = await db.users.findByPk(id);
+            let user = await db.users.findByPk(id, { attributes: CONSTANTS.USER_ATTRIBUTES });
             if (user) {
                 done(null, user);
             }
@@ -96,6 +136,8 @@ class App {
     }
 
     private initializeRoutes(routes: any) {
+        this.adminApp.use(adminRoutes);
+        this.app.use('/admin-api', this.adminApp);
         this.app.use('/api', routes);
     }
 

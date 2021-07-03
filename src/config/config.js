@@ -22,7 +22,8 @@ export default {
     logging: false,
     dialectOptions: { decimalNumbers: true },
     define: { freezeTableName: true },
-    query: { raw: true }
+    query: { raw: true },
+    seederStorage: "sequelize"
   },
 
   // Server port
@@ -39,4 +40,10 @@ export default {
   SESSION_SECRET: process.env.SESSION_SECRET,
   SESSION_AGE: Number(process.env.SESSION_AGE),
   SESSION_TABLE_NAME: process.env.SESSION_TABLE_NAME,
+
+  // Admin Session
+  ADMIN_SESSION_NAME: process.env.ADMIN_SESSION_NAME,
+  ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET,
+  ADMIN_SESSION_AGE: Number(process.env.ADMIN_SESSION_AGE),
+  ADMIN_SESSION_TABLE_NAME: process.env.ADMIN_SESSION_TABLE_NAME,
 }

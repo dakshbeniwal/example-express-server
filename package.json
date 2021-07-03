@@ -7,6 +7,7 @@
     "start": "NODE_ENV=development nodemon server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "NODE_ENV=development sequelize db:migrate",
+    "seed": "NODE_ENV=development sequelize db:seed:all",
     "build": "export NODE_ENV=development && webpack --env NODE_ENV=development --mode=development"
   },
   "author": "Daksh Beniwal",

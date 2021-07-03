@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as CONSTANTS from "../config/constants.json";
 import { logger } from "./logger";
 
-const { ERROR_CONSTANTS: { VALIDATION_ERROR, BAD_REQUEST, INTERNAL_ERROR, NOT_FOUND } } = CONSTANTS;
+const { ERROR_CONSTANTS: { VALIDATION_ERROR, BAD_REQUEST, INTERNAL_ERROR, NOT_FOUND, UNAUTHENTICATED_ERROR } } = CONSTANTS;
 class BaseError extends Error {
     public readonly name: string;
     public readonly httpCode: number;
@@ -69,6 +69,12 @@ export class BadRequestError extends BaseError {
 export class ValidationError extends BaseError {
     constructor(message: string) {
         super(message, VALIDATION_ERROR.name, VALIDATION_ERROR.statusCode, VALIDATION_ERROR.errorCode, VALIDATION_ERROR.isOperational)
+    }
+}
+
+export class UnauthenticatedError extends BaseError {
+    constructor() {
+        super(UNAUTHENTICATED_ERROR.defaultMessage, UNAUTHENTICATED_ERROR.name, UNAUTHENTICATED_ERROR.statusCode, UNAUTHENTICATED_ERROR.errorCode, UNAUTHENTICATED_ERROR.isOperational)
     }
 }
 
