@@ -26,8 +26,8 @@ class BaseError extends Error {
 class ErrorHandler {
     logError = (err: Error) => {
         console.log(err);
-        if (!this.isOperationalError(err))
-            logger.error(err);
+        if (!this.isOperationalError(err)) logger.fatal(err);
+        else logger.error(err);
     }
 
     logErrorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {

@@ -9,6 +9,7 @@ import { Passport } from "./src/helpers/passport";
 import session from 'express-session';
 import connect_session_sequelize from "connect-session-sequelize";
 import { db, dbInstance } from "./src/models/index";
+import { httpLogger } from "./src/helpers/httpLogger";
 
 class App {
     public app: express.Application;
@@ -71,6 +72,7 @@ class App {
             credentials: true
         }));
         this.app.use(express.json({ limit: "2mb" }));
+        this.app.use(httpLogger);
     }
 
     private initializeErrorhandler() {

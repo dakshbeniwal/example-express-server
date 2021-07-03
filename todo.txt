@@ -1,4 +1,3 @@
-Add express-winston
 Validation using joi
 Admin login
-Removing any as much as possible and convert config.js to config.ts
+Define types and remove `any`
