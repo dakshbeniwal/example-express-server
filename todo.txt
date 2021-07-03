@@ -1,3 +1,4 @@
-Validation using joi
 Admin login
 Define types and remove `any`
+Add example admin API and middleware to check if user is looged in or isAdmin etc
+Add example migration and seeder

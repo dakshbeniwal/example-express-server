@@ -4,26 +4,31 @@
         "BAD_REQUEST": 400,
         "UNPROCESSABLE_ENTITY": 422
     },
-    "ERROR_CODES": {
-        "INTERNAL_SERVER_ERROR": "internal_error"
-    },
-    "NOT_FOUND": {
-        "name": "Not Found",
-        "errorCode": "not_found",
-        "statusCode": 404,
-        "isOperational": true
-    },
-    "INTERNAL_ERROR": {
-        "name": "Internal Error",
-        "errorCode": "internal_error",
-        "statusCode": 500,
-        "isOperational": false,
-        "defaultMessage": "Something went wrong, please try again after sometime."
-    },
-    "BAD_REQUEST": {
-        "name": "Bad Request",
-        "errorCode": "bad_request",
-        "statusCode": 400,
-        "isOperational": true
+    "ERROR_CONSTANTS": {
+        "NOT_FOUND": {
+            "name": "Not Found",
+            "errorCode": "not_found",
+            "statusCode": 404,
+            "isOperational": true
+        },
+        "INTERNAL_ERROR": {
+            "name": "Internal Error",
+            "errorCode": "internal_error",
+            "statusCode": 500,
+            "isOperational": false,
+            "defaultMessage": "Something went wrong, please try again after sometime."
+        },
+        "BAD_REQUEST": {
+            "name": "Bad Request",
+            "errorCode": "bad_request",
+            "statusCode": 400,
+            "isOperational": true
+        },
+        "VALIDATION_ERROR": {
+            "name": "Validation error",
+            "errorCode": "validation_error",
+            "statusCode": 400,
+            "isOperational": true
+        }
     }
 }

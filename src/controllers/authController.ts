@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
-import { BadRequestError, InternalError } from "../helpers/errorHandler";
+import { BadRequestError, InternalError, ValidationError } from "../helpers/errorHandler";
 import { Passport } from "../helpers/passport";
+import { validateLoginData, validateSignupData } from "../validations/authValidations";
 
 class Auth {
     signupController = async (req: Request, res: Response) => {
         console.log("in signup controller ----");
+        const joiValidation = validateSignupData(req.body);
+        if (joiValidation.error) throw new ValidationError(joiValidation.error.message);
+
         const signupResponse: { success: boolean, error?: string, data?: any } = await new Promise((resolve) => new Passport().localPassport.authenticate('signup', (error, user) => {
             if (error) resolve({ "success": false, "error": error });
             else resolve({ "success": true, "data": user });
@@ -20,6 +24,9 @@ class Auth {
 
     loginController = async (req: Request, res: Response) => {
         console.log("in login controller ----");
+        const joiValidation = validateLoginData(req.body);
+        if (joiValidation.error) throw new ValidationError(joiValidation.error.message);
+
         const loginStrategyResponse: { success: boolean, error?: string, data?: any } = await new Promise((resolve) => new Passport().localPassport.authenticate('login', (error, user) => {
             if (error) resolve({ "success": false, "error": error });
             else resolve({ "success": true, "data": user });
