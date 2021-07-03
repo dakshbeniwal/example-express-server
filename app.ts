@@ -50,7 +50,7 @@ class App {
                 done(null, user);
             }
             else
-                done(user.errors, null);
+                done(`Logged in admin user not found in database, id - ${id}`, null);
         });
 
         this.adminApp.use(session({
@@ -85,7 +85,7 @@ class App {
                 done(null, user);
             }
             else
-                done(user.errors, null);
+                done(`Logged in user not found in database, id - ${id}`, null);
         });
 
         this.app.use("/api", session({
