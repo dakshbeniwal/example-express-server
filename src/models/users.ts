@@ -5,9 +5,11 @@ export interface IUsers {
   "firstname": string,
   "lastname": string,
   "email": string,
-  "phone": string,
-  "password": string,
-  "username": string
+  "phone"?: string,
+  "password"?: string,
+  "username": string,
+  "googleId"?: string,
+  "emailVerified": boolean
 }
 
 module.exports = (sequelize: Sequelize, DataTypes: any) => {
@@ -43,18 +45,18 @@ module.exports = (sequelize: Sequelize, DataTypes: any) => {
       allowNull: false,
       unique: true
     },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+    phone: DataTypes.STRING,
+    password: DataTypes.STRING,
     username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    googleId: DataTypes.STRING,
+    emailVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
   }, {
     sequelize,

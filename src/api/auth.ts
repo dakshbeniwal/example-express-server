@@ -44,3 +44,24 @@ export const getLoggedInUserApi = async (req: Request, res: Response, next: Next
         next(err);
     }
 }
+
+export const googleLoginApi = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        console.log("in google login API ----");
+        const response = await auth.googleLoginController(req, res);
+        return res.send(response);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const googleOAuthApi = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        console.log("in google oAuth API ----");
+        return await auth.googleAuthController(req, res, next);
+    }
+    catch (err) {
+        next(err);
+    }
+}

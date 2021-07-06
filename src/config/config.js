@@ -46,4 +46,8 @@ export default {
   ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET,
   ADMIN_SESSION_AGE: Number(process.env.ADMIN_SESSION_AGE),
   ADMIN_SESSION_TABLE_NAME: process.env.ADMIN_SESSION_TABLE_NAME,
+
+  // Google OAuth
+  GOOGLE_CLIENT_ID: String(process.env.GOOGLE_CLIENT_ID),
+  GOOGLE_CLIENT_SECRET: String(process.env.GOOGLE_CLIENT_SECRET)
 }

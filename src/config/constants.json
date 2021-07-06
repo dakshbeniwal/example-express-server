@@ -50,5 +50,9 @@
         "email",
         "firstname",
         "lastname"
-    ]
+    ],
+    "ERROR_MESSAGES": {
+        "NO_USER_FROM_PASSPORT": "Passport strategy didn't return any user.",
+        "UNABLE_TO_PROCESS_REQUEST": "We are unable to process you request, please try again later."
+    }
 }
